@@ -332,8 +332,8 @@ MonoBehaviour:
   zigzagFrequency: 2
   zigzagAmplitude: 0.6
   bulletPrefab: {fileID: 6640151790433843257, guid: 2b023d33048a4cd4e8aa40d6e72ddc1e, type: 3}
-  dropProbability: 0
-  dropItemPrefab: {fileID: 2079447832053176235, guid: 35619b5cb7bd57840ba69fdb85fef4ca, type: 3}
+  dropProbability: 0.25
+  dropItemPrefab: {fileID: 2179046270816431085, guid: 0d144108cd0fa7a4e996dfa43f3d10f7, type: 3}
   deattheffect: {fileID: 7306677558204580821, guid: 12c5b461468326d458ca6be42d0b3953, type: 3}
   Clip: {fileID: 128860743546316138}
   enemyColor: {r: 0.9622642, g: 0.049928807, b: 0.049928807, a: 1}

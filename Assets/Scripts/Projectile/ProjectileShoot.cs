@@ -24,6 +24,21 @@ public class ProjectileShoot : MonoBehaviour
     private float tripleShotDuration = 7f;
     private float tripleShotTimeLeft;
 
+    [Header("Misiles Guiados")]
+    public GameObject homingMissilePrefab;
+    public Slider homingSlider;
+    private bool isHomingActive = false;
+    private float homingDuration = 7f;
+    private float homingTimeLeft;
+
+    [Header("Rapid Fire")]
+    public Slider rapidFireSlider;
+    [SerializeField] private float rapidFireDuration = 5f;
+    [SerializeField] private float rapidFireCooldown = 0.08f;
+    private bool isRapidFireActive = false;
+    private float rapidFireTimeLeft;
+    private float originalShootCooldown;
+
     public bool IsTripleShotActive => isTripleShotActive;
 
     public float shootCooldown = 0.5f; // Tiempo de cooldown entre disparos
@@ -40,10 +55,10 @@ public class ProjectileShoot : MonoBehaviour
     private AudioSource audioSource;
     public GameObject reinforcementsPrefab; // Prefab de las naves
     public Transform[] reinforcementPoints;
-    public float spawnYPosition = -5f; // Posición Y desde donde las naves aparecerán
+    public float spawnYPosition = -5f; // Posiciï¿½n Y desde donde las naves aparecerï¿½n
     public float movementSpeed = 5f; // Velocidad de movimiento de las naves hacia el centro
     public float fireInterval = 0.5f; // Intervalo entre disparos de las naves
-    public float shootingAngle = 0f; // Ángulo en el que las naves dispararán
+    public float shootingAngle = 0f; // ï¿½ngulo en el que las naves dispararï¿½n
 
     [SerializeField] public float shootingDuration = 2f;
     [SerializeField] public float enterSpeed = 5f;
@@ -54,9 +69,12 @@ public class ProjectileShoot : MonoBehaviour
 
     void Start()
     {
-        // Configuración inicial de sliders
+        // Configuraciï¿½n inicial de sliders
         tripleShotSlider.gameObject.SetActive(false);
+        homingSlider.gameObject.SetActive(false);
+        rapidFireSlider.gameObject.SetActive(false);
         timeSinceLastShot = shootCooldown;
+        originalShootCooldown = shootCooldown;
         audioSource = GetComponent<AudioSource>();
 
         if (warningImage != null)
@@ -92,6 +110,31 @@ public class ProjectileShoot : MonoBehaviour
                 tripleShotSlider.gameObject.SetActive(false);
             }
         }
+
+        if (isHomingActive)
+        {
+            homingTimeLeft -= Time.deltaTime;
+            homingSlider.value = homingTimeLeft;
+
+            if (homingTimeLeft <= 0)
+            {
+                isHomingActive = false;
+                homingSlider.gameObject.SetActive(false);
+            }
+        }
+
+        if (isRapidFireActive)
+        {
+            rapidFireTimeLeft -= Time.deltaTime;
+            rapidFireSlider.value = rapidFireTimeLeft;
+
+            if (rapidFireTimeLeft <= 0)
+            {
+                isRapidFireActive = false;
+                rapidFireSlider.gameObject.SetActive(false);
+                shootCooldown = originalShootCooldown;
+            }
+        }
     }
 
     private IEnumerator ShowWarningAndShoot()
@@ -118,7 +161,7 @@ public class ProjectileShoot : MonoBehaviour
 
     public void ActivateTripleShot()
     {
-        // Reiniciar la duración y actualizar el slider siempre que se active
+        // Reiniciar la duraciï¿½n y actualizar el slider siempre que se active
         tripleShotTimeLeft = tripleShotDuration;
         tripleShotSlider.maxValue = tripleShotDuration;
         tripleShotSlider.value = tripleShotDuration;
@@ -148,7 +191,11 @@ public class ProjectileShoot : MonoBehaviour
 
     void Shoot()
     {
-        if (isTripleShotActive)
+        if (isHomingActive)
+        {
+            FireHomingMissile();
+        }
+        else if (isTripleShotActive)
         {
             FireProjectile(Vector2.up);
             FireProjectile(Quaternion.Euler(0, 0, 20) * Vector2.up);
@@ -158,6 +205,31 @@ public class ProjectileShoot : MonoBehaviour
         {
             FireProjectile(Vector2.up);
         }
+    }
+
+    private void FireHomingMissile()
+    {
+        if (homingMissilePrefab == null) return;
+        Instantiate(homingMissilePrefab, firePoint.position, firePoint.rotation);
+    }
+
+    public void ActivateHomingMissiles()
+    {
+        homingTimeLeft = homingDuration;
+        homingSlider.maxValue = homingDuration;
+        homingSlider.value = homingDuration;
+        homingSlider.gameObject.SetActive(true);
+        isHomingActive = true;
+    }
+
+    public void ActivateRapidFire()
+    {
+        rapidFireTimeLeft = rapidFireDuration;
+        rapidFireSlider.maxValue = rapidFireDuration;
+        rapidFireSlider.value = rapidFireDuration;
+        rapidFireSlider.gameObject.SetActive(true);
+        isRapidFireActive = true;
+        shootCooldown = rapidFireCooldown;
     }
 
     private void FireProjectile(Vector2 direction)
@@ -211,18 +283,18 @@ public class ProjectileShoot : MonoBehaviour
     {
         List<GameObject> spawnedReinforcements = new List<GameObject>(); // Lista para almacenar las naves creadas
 
-        // Iterar por los puntos de aparición y crear naves
+        // Iterar por los puntos de apariciï¿½n y crear naves
         foreach (Transform point in reinforcementPoints)
         {
-            // Instanciar la nave en la posición del punto
+            // Instanciar la nave en la posiciï¿½n del punto
             GameObject reinforcement = Instantiate(reinforcementsPrefab, point.position, Quaternion.identity);
 
-            // Ajustar la rotación según el punto de aparición
-            if (point.position.x < 0) // Si el punto está a la izquierda
+            // Ajustar la rotaciï¿½n segï¿½n el punto de apariciï¿½n
+            if (point.position.x < 0) // Si el punto estï¿½ a la izquierda
             {
                 reinforcement.transform.rotation = Quaternion.Euler(0, 0, -90f); // Mirando hacia la derecha
             }
-            else if (point.position.x > 0) // Si el punto está a la derecha
+            else if (point.position.x > 0) // Si el punto estï¿½ a la derecha
             {
                 reinforcement.transform.rotation = Quaternion.Euler(0, 0, 90f); // Mirando hacia la izquierda
             }
@@ -230,15 +302,15 @@ public class ProjectileShoot : MonoBehaviour
             // Agregar la nave a la lista
             spawnedReinforcements.Add(reinforcement);
 
-            // Hacer que las naves disparen desde su posición
+            // Hacer que las naves disparen desde su posiciï¿½n
             StartCoroutine(ShootAtCenter(reinforcement));
         }
 
-        // Iniciar la corrutina para destruirlas después de reinforcementLifetime segundos
+        // Iniciar la corrutina para destruirlas despuï¿½s de reinforcementLifetime segundos
         StartCoroutine(DestroyReinforcements(spawnedReinforcements));
     }
 
-    // Corrutina para destruir las naves después de reinforcementLifetime segundos
+    // Corrutina para destruir las naves despuï¿½s de reinforcementLifetime segundos
     private IEnumerator DestroyReinforcements(List<GameObject> reinforcements)
     {
         yield return new WaitForSeconds(reinforcementLifetime);
@@ -254,7 +326,7 @@ public class ProjectileShoot : MonoBehaviour
 
     private IEnumerator MoveReinforcementIn(GameObject reinforcement, bool fromLeft)
     {
-        // Definir la posición final (en el centro en el eje X)
+        // Definir la posiciï¿½n final (en el centro en el eje X)
         Vector3 targetPosition = new Vector3(0f, spawnYPosition, 0f); // Centro en X
         float startX = fromLeft ? -10f : 10f; // Si viene de la izquierda o de la derecha
         reinforcement.transform.position = new Vector3(startX, spawnYPosition, 0f);
@@ -267,7 +339,7 @@ public class ProjectileShoot : MonoBehaviour
             yield return null;
         }
 
-        // Una vez que la nave entra, se queda en su posición
+        // Una vez que la nave entra, se queda en su posiciï¿½n
         reinforcement.transform.position = targetPosition;
     }
 
@@ -277,13 +349,13 @@ public class ProjectileShoot : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         float timeElapsed = 0f;
-        // Determinar la dirección según la posición de la nave
+        // Determinar la direcciï¿½n segï¿½n la posiciï¿½n de la nave
         Vector2 shootDirection = reinforcement.transform.position.x < 0 ? Vector2.right : Vector2.left;
 
         // Realizar disparos hacia el centro durante unos segundos
         while (timeElapsed < shootingDuration)
         {
-            FireProjectileFromReinforcement(reinforcement); // Disparar hacia la dirección calculada
+            FireProjectileFromReinforcement(reinforcement); // Disparar hacia la direcciï¿½n calculada
             timeElapsed += fireInterval;
             yield return new WaitForSeconds(fireInterval);
         }
@@ -300,9 +372,9 @@ public class ProjectileShoot : MonoBehaviour
             if (bullet != null)
             {
                 bullet.transform.position = firePoint.position;
-                bullet.transform.rotation = Quaternion.identity; // Asegurar que no tenga rotación
+                bullet.transform.rotation = Quaternion.identity; // Asegurar que no tenga rotaciï¿½n
 
-                // Asignar la dirección en función de la posición del FirePoint
+                // Asignar la direcciï¿½n en funciï¿½n de la posiciï¿½n del FirePoint
                 Projectile2 projectileScript = bullet.GetComponent<Projectile2>();
                 if (projectileScript != null)
                 {
@@ -331,12 +403,26 @@ public class ProjectileShoot : MonoBehaviour
             ActivateTripleShot();
             Destroy(collision.gameObject);
         }
+
+        if (collision.CompareTag("PowerUpHoming"))
+        {
+            Clip.Play();
+            ActivateHomingMissiles();
+            Destroy(collision.gameObject);
+        }
+
+        if (collision.CompareTag("PowerUpRapidFire"))
+        {
+            Clip.Play();
+            ActivateRapidFire();
+            Destroy(collision.gameObject);
+        }
     }
 
     public void IncreaseCharge()
     {
         currentCharge += chargePerHit;
-        currentCharge = Mathf.Clamp(currentCharge, 0f, maxCharge);  // Limitar a 100 máximo
+        currentCharge = Mathf.Clamp(currentCharge, 0f, maxCharge);  // Limitar a 100 mï¿½ximo
         chargedShotSlider.value = currentCharge;
     }
 }

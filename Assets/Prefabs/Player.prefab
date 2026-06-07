@@ -246,11 +246,31 @@ MonoBehaviour:
   bulletSpeed: 4
   damage: 20
   lifespan: 1
+  playerAnimator: {fileID: 0}
   chargedShotSlider: {fileID: 0}
   maxCharge: 100
   chargePerHit: 20
   tripleShotSlider: {fileID: 0}
+  homingMissilePrefab: {fileID: 0}
+  homingSlider: {fileID: 0}
+  rapidFireSlider: {fileID: 0}
+  rapidFireDuration: 5
+  rapidFireCooldown: 0.08
   shootCooldown: 0.2
+  Clip: {fileID: 0}
+  warningImage: {fileID: 0}
+  chargedShotKey: 102
+  warningDuration: 1
+  chargedShotSound: {fileID: 0}
+  reinforcementsPrefab: {fileID: 0}
+  reinforcementPoints: []
+  spawnYPosition: -5
+  movementSpeed: 5
+  fireInterval: 0.5
+  shootingAngle: 0
+  shootingDuration: 2
+  enterSpeed: 5
+  reinforcementLifetime: 5
 --- !u!114 &7754394102088881137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ac08cc70a47e248b62a6c36ac48ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 5
   acceleration: 18
   deceleration: 5
   hInput: 0
@@ -400,6 +420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 6631127048396045627, guid: b820b089f0909f64ca1e1e641e1b4de0, type: 3}
   poolSize: 20
+  poolParent: {fileID: 0}
 --- !u!95 &4392054524407243162
 Animator:
   serializedVersion: 5

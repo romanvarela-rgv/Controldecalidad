@@ -378,8 +378,8 @@ MonoBehaviour:
   healthbar: {fileID: 1350608643270800657}
   maxHealth: 100
   valueKamikaze: 40
-  dropProbability: 0
-  dropItemPrefab: {fileID: 2079447832053176235, guid: 35619b5cb7bd57840ba69fdb85fef4ca, type: 3}
+  dropProbability: 0.25
+  dropItemPrefab: {fileID: 2179046270816431085, guid: 452a5114621e6fe4e9006a14e7cb915c, type: 3}
   deattheffect: {fileID: 7306677558204580821, guid: 12c5b461468326d458ca6be42d0b3953, type: 3}
   Clip: {fileID: -2932928423465820569}
   deathEffectColor: {r: 0.58431375, g: 0.68235296, b: 0.80392164, a: 1}

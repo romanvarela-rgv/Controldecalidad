@@ -31,7 +31,7 @@ public class Kamikaze : MonoBehaviour
 
     private void Update()
     {
-        // Aquí puedes agregar lógica adicional si es necesario
+        // Aquï¿½ puedes agregar lï¿½gica adicional si es necesario
     }
 
     public void TakeDamage(float damage)
@@ -47,7 +47,7 @@ public class Kamikaze : MonoBehaviour
 
         if (currentHealth > 0)
         {
-            Clip.Play(); // Sonido de daño
+            Clip.Play(); // Sonido de daï¿½o
             spriteRenderer.color = Color.red;
             yield return new WaitForSeconds(damageDuration);
             spriteRenderer.color = Color.white;
@@ -73,13 +73,10 @@ public class Kamikaze : MonoBehaviour
 
     private void TryDropItem()
     {
-        // Generar un número aleatorio entre 0 y 1
         float randomValue = Random.value;
 
-        // Verificar si el número generado está dentro de la probabilidad de drop
         if (randomValue <= dropProbability)
         {
-            // Instanciar el objeto en la posición del enemigo
             Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
         }
     }
