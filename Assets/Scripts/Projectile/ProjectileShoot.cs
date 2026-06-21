@@ -85,6 +85,8 @@ public class ProjectileShoot : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
+
         timeSinceLastShot += Time.deltaTime;
 
         if (Input.GetButtonDown("Fire1") && timeSinceLastShot >= shootCooldown)
@@ -161,32 +163,11 @@ public class ProjectileShoot : MonoBehaviour
 
     public void ActivateTripleShot()
     {
-        // Reiniciar la duraci�n y actualizar el slider siempre que se active
         tripleShotTimeLeft = tripleShotDuration;
         tripleShotSlider.maxValue = tripleShotDuration;
         tripleShotSlider.value = tripleShotDuration;
         tripleShotSlider.gameObject.SetActive(true);
-
-        if (!isTripleShotActive)
-        {
-            isTripleShotActive = true;
-            StopAllCoroutines(); // Detenemos cualquier coroutine previo
-            StartCoroutine(TripleShotCooldown());
-        }
-    }
-
-    private IEnumerator TripleShotCooldown()
-    {
-        while (tripleShotTimeLeft > 0)
-        {
-            tripleShotTimeLeft -= Time.deltaTime;
-            tripleShotSlider.value = tripleShotTimeLeft;
-            yield return null; // Espera un frame
-        }
-
-        // Cuando termina, desactivar el efecto y resetear la barra
-        isTripleShotActive = false;
-        tripleShotSlider.gameObject.SetActive(false);
+        isTripleShotActive = true;
     }
 
     void Shoot()

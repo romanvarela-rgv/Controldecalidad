@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class DashMovement : MonoBehaviour
 {
-    public float moveSpeed = 4f; // Velocidad máxima
-    public float acceleration = 15f; // Aceleración del movimiento
-    public float deceleration = 10f; // Desaceleración al frenar
+    public float moveSpeed = 4f; // Velocidad mï¿½xima
+    public float acceleration = 15f; // Aceleraciï¿½n del movimiento
+    public float deceleration = 10f; // Desaceleraciï¿½n al frenar
     public float hInput;
     public float vInput;
 
@@ -44,12 +44,7 @@ public class DashMovement : MonoBehaviour
 
     private void Update()
     {
-        /*
-        if(pauseM.onPause == true)
-        {
-            return;
-        }
-        */
+        if (Time.timeScale == 0f) return;
 
         if (isDashing)
         {
@@ -165,7 +160,7 @@ public class DashMovement : MonoBehaviour
     private IEnumerator SlowDownPlayer()
     {
         moveSpeed *= slowdownPlayer; // Reduce la velocidad a la mitad
-        yield return new WaitForSeconds(2f); // Duración de la ralentización
+        yield return new WaitForSeconds(2f); // Duraciï¿½n de la ralentizaciï¿½n
         moveSpeed = originalMoveSpeed; // Restaura la velocidad original
     }
 }
